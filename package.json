@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "mocha --require ts-node/register --watch-extensions ts --watch 'tests/*.test.ts'",
+    "test": "mocha --bail --exit --require ts-node/register --watch-extensions ts 'tests/*.test.ts'",
     "clean": "rm -rf dist",
     "build-web": "webpack --config webpack.prod.js && webpack --config webpack.debug.js"
   },

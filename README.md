@@ -25,10 +25,10 @@ code is 0, message is 'ok', content is the result.
 
 ``` json
 {
-  code: -10001,
-  message: '请求参数无效',
-  content: '',
-  details: 'did invalid'
+  "code": -10001,
+  "message": '请求参数无效',
+  "content": '',
+  "details": 'did invalid'
 }
 ```
 
@@ -45,17 +45,17 @@ console.log(response);
 ```
 
 - did op
-[did](doc/did.md)
+[did](doc/source/doc-md/sdk/javascript/did.md)
 
 - issuer op
-[issuer](doc/issuer.md)
+[issuer](doc/source/doc-md/sdk/javascript/issuer.md)
 
 - claim op
-[claim](doc/claim.md)
+[claim](doc/source/doc-md/sdk/javascript/claim.md)
 
 - crypto op
-[crypto](doc/crypto.md)
+[crypto](doc/source/doc-md/sdk/javascript/crypto.md)
 
 - utils op
-[utils](doc/utils.md)
+[utils](doc/source/doc-md/sdk/javascript/utils.md)
 
