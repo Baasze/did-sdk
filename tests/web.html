@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel='stylesheet' type='text/css' href='web.css'>
+    <script src='../dist-web/SANClient.js'></script>
+    <script>
+
+        const client = new SANClient.SANClient({serviceEndpoint: "http://127.0.0.1:9100"});
+        const EXECUTING = 'Executing Test', SUCCESS = 'Success', FAILED = 'Failed';
+        let resultsLabel, transactionResponse, transactionSignatures, failedAsPlanned, response;
+        let did, authenticationKey, recoveryKey, newRecoveryKey, issuer = {}, applyId, claim = {};
+        const waitOneSecond = () => new Promise(resolve => setTimeout(resolve, 1000))
+
+        const testCreateDid = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                var response = await client.did.create();
+
+                did = response.content.did
+                authenticationKey = response.content.authenticationKey
+                recoveryKey = response.content.recoveryKey
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Create DID Account Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        }
+
+        const testResolveDid = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+               response = await client.did.resolve(did);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Resolve DID Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testUpdateDid = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+               const newAuthenticationKey = client.crypto.newKey();
+
+               document1 = response.content.document;
+               newRecoveryKey = client.crypto.newKey();
+               document1.publicKey = client.utils.setDocumentKey(document1.publicKey, newAuthenticationKey, document1.authentication[0])
+               document1.publicKey = client.utils.setDocumentKey(document1.publicKey, newRecoveryKey, document1.recovery[0])
+               response = await client.did.update(did, recoveryKey.priKey, document1, newRecoveryKey.priKey);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Update DID Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testRevokeDid = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+               response = await client.did.revoke(did, newRecoveryKey.priKey);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Resolve DID Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testCreateIssuer = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.did.create();
+                did = response.content.did
+                authenticationKey = response.content.authenticationKey
+                recoveryKey = response.content.recoveryKey
+
+                response = await client.issuer.claim({ issuer: did }, response.content.document.authentication[0], authenticationKey.priKey)
+                issuer = {
+                    "website": "https://cloud.baidu.com/solution/digitalIdentity.html",
+                    "endpoint": "https://did.baidu.com",
+                    "shortDescription": "百度云企业认证声明",
+                    "longDescription": "用户的账号在百度云平台需要通过需要提交企业名称、营业执照注册号、营业执照扫描件等才能通过审核获得百度云企业认证。",
+                    "serviceType": "EnterpriseAuthentication",
+                    "requestData": {
+                    // "basicData": any[],
+                    // "otherData": any,
+                    },
+                };
+                issuer.did = did;
+                response = await client.issuer.create(issuer, authenticationKey.priKey);
+                issuer = response.content.issuer;
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Create Issuer Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testResolveIssuer = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.issuer.resolve(issuer.uuid);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Resolve Issuer Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        }; 
+        
+        const testUpdateIssuer = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                issuer.shortDescription = "白泽企业认证声明"
+                response = await client.issuer.update(issuer, authenticationKey.priKey);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Update Issuer Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+        const testRevokeIssuer = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.issuer.revoke(did, issuer.uuid, recoveryKey.priKey);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Revoke Issuer Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testApplyClaim = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.issuer.resolve('5f72d137-4670-f36a-ae7d-ca2a636c2a65');
+                issuer = response.content.issuers[0];
+                issuer.requestData = {
+                    basicData: {
+                        Name: 'san',
+                        MobilePhone: 'san',
+                        ClaimType: 'san',
+                    },
+                    otherData: [],
+                };
+                response = await client.claim.apply(issuer.uuid, issuer.endpoint, did, issuer.requestData, authenticationKey.priKey)
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Apply Claim Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testResultClaim = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                applyId = response.content.applyId
+                response = await client.claim.result(issuer.uuid, issuer.endpoint, did, applyId, authenticationKey.priKey);
+                claim = response.content.claim;
+                claim = JSON.stringify(claim)
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Result Claim Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testAuthorizeClaim = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.did.create();
+                const vcdid = response.content.did
+                authenticationKey = response.content.authenticationKey
+                response = await client.claim.authorize(vcdid, claim);
+                claim = response.content.claim
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Authorize Claim Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const testVerifyClaim = async (e) => {
+            resultsLabel = e.target;
+            resultsLabel.innerText = EXECUTING;
+
+            try {
+                response = await client.claim.verify(claim, authenticationKey.priKey);
+            } catch (error) {
+                resultsLabel.className = 'failed';
+                resultsLabel.innerText = FAILED;
+                console.error('Verify Cliam Test Failure: ', error.message);
+                return false;
+            }
+
+            if (response.code == 0) {
+                resultsLabel.className = "success";
+                resultsLabel.innerText = SUCCESS;
+                return true;
+            }
+            resultsLabel.className = 'failed';
+            resultsLabel.innerText = FAILED;
+            return false;
+        };
+
+        const runAllTests = async () => {
+            const buttons = document.getElementsByTagName('button');
+            for (var i = 1; i < buttons.length; i++) {
+                var button = buttons[i];
+                button.click();
+                await waitOneSecond();
+            }
+            return;
+        }
+    </script>
+</head>
+
+<body>
+    <div class='header-container'>
+        <div class='header'>
+            <h1>Web Build Integration Tests</h1>
+            <button onClick='runAllTests();'>Run All Tests</button>
+        </div>
+    </div>
+    <div class='tests'>
+        <div>
+            <h2>Create did account</h2><button onClick='testCreateDid(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Resolve did account</h2><button
+                onClick='testResolveDid(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Update Did Account</h2><button onClick='testUpdateDid(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Revoke Did Account</h2><button onClick='testRevokeDid(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Create Issuer</h2><button onClick='testCreateIssuer(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Resolve Issuer</h2><button onClick='testResolveIssuer(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Update Issuer</h2><button onClick='testUpdateIssuer(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Revoke Issuer</h2><button onClick='testRevokeIssuer(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Apply Claim</h2><button onClick='testApplyClaim(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Result Claim</h2><button onClick='testResultClaim(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Authorize Claim</h2><button onClick='testAuthorizeClaim(event);'>Test</button>
+        </div>
+        <div>
+            <h2>Verify Claim</h2><button onClick='testVerifyClaim(event);'>Test</button>
+        </div>
+    </div>
+</body>
+
+</html>

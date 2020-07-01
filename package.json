@@ -1,0 +1,48 @@
+{
+  "name": "did-sdk",
+  "version": "0.1.10",
+  "description": "SAN did sdk",
+  "main": "dist/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "mocha --require ts-node/register --watch-extensions ts --watch 'tests/*.test.ts'",
+    "clean": "rm -rf dist",
+    "build-web": "webpack --config webpack.prod.js && webpack --config webpack.debug.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/ihyperdata/did/did-sdk.git"
+  },
+  "keywords": [
+    "SAN",
+    "did",
+    "sdk"
+  ],
+  "author": "sandman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/ihyperdata/did/did-sdk/issues"
+  },
+  "homepage": "https://gitlab.com/ihyperdata/did/did-sdk#readme",
+  "dependencies": {
+    "icbsc.js": "^1.0.14"
+  },
+  "devDependencies": {
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.13.5",
+    "@types/node-fetch": "^2.5.7",
+    "assert": "^2.0.0",
+    "mocha": "^7.1.2",
+    "node-fetch": "^2.6.0",
+    "ts-loader": "^7.0.4",
+    "ts-mocha": "^7.0.0",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}

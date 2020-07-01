@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+      "target": "es5",
+      "module": "CommonJS",
+      "outDir": "dist",
+      "alwaysStrict": true,
+      "sourceMap": true,
+      "noImplicitAny": true,
+      "moduleResolution": "node",
+      "declaration": true,
+      "downlevelIteration": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "lib": [
+          "es2017",
+          "dom"
+      ]
+  },
+  "include": [
+      "lib/*.js",
+      "lib/*.ts",
+      "tests/*.js",
+      "tests/*.ts",
+      "lib/**/*.ts",
+      "lib/**/*.js"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "tests/"
+  ]
+}
