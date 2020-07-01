@@ -12,10 +12,10 @@ yarn add did-sdk
 
 ``` json
 {
-  code: 0,
-  message: 'ok',
-  content: { issuers: [ [Object] ] },
-  details: ''
+  "code": 0,
+  "message": "ok",
+  "content": { "issuers": [ ["Object"] ] },
+  "details": ""
 }
 ```
 
@@ -26,9 +26,9 @@ code is 0, message is 'ok', content is the result.
 ``` json
 {
   "code": -10001,
-  "message": '请求参数无效',
-  "content": '',
-  "details": 'did invalid'
+  "message": "请求参数无效",
+  "content": "",
+  "details": "did invalid"
 }
 ```
 
