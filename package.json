@@ -29,7 +29,7 @@
   },
   "homepage": "https://gitlab.com/ihyperdata/did/did-sdk#readme",
   "dependencies": {
-    "icbsc.js": "^1.0.14"
+    "icbsc.js": "^1.0.17"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
