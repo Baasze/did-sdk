@@ -5,7 +5,7 @@ Javascript
 DID Javascript SDK 简介
 -------------------------
 
-DID Javascript SDK 提供了一整套对 SAN Identity 进行管理操作的 Javascript 库。 目前，SDK 支持密钥管理、数字身份标识（SAN DID）管理、 声明（Claim）管理、 发证方（Issuer）管理。 未来还将支持更丰富的功能和应用。
+DID Javascript SDK 提供了一整套对 SAN DID 进行管理操作的 Javascript 库。 目前，SDK 支持密钥管理、数字身份标识（SAN DID）管理、 声明（Claim）管理、 发证方（Issuer）管理。 未来还将支持更丰富的功能和应用。
 
 接口能力
 ---------
@@ -52,6 +52,19 @@ SAN DID 密钥工具    创建密钥对            生成 Sm2p256v1 密钥对
 
 安装
 ^^^^^^^
+
+.. code:: bash
+
+   yarn add did-sdk
+
+创建 SANClient
+-----------------
+
+.. code:: javascript
+
+   const { SANClient } = require('did-sdk');
+   let client = new SANClient({ serviceEndpoint: "did-service url", fetch: "your fetch implementation" });
+
 
 **DID-SDK 目录结构**
 ::
@@ -108,28 +121,14 @@ SAN DID 密钥工具    创建密钥对            生成 Sm2p256v1 密钥对
    ├── node_modules
    ├── package.json
 
-
-**使用 yarn 进行安装** 
-
-.. code:: bash
-
-   yarn add did-sdk
-
-创建 SANClient
------------------
-
-.. code:: javascript
-   
-   const { SANClient } = require('did-sdk');
-   let client = new SANClient({ serviceEndpoint: "did-service url", fetch: "your fetch implementation" });
-
 接口说明
 ----------
 
 .. toctree::
    :maxdepth: 3
 
-   javascript/did.md
-   javascript/issuer.md
-   javascript/claim.md
-   javascript/crypto.md
+   sdk/javascript/did.md
+   sdk/javascript/issuer.md
+   sdk/javascript/claim.md
+   sdk/javascript/crypto.md
+   sdk/javascript/utils.md
