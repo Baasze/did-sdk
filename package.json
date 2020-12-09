@@ -1,6 +1,6 @@
 {
   "name": "did-sdk",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "SAN did sdk",
   "main": "dist/index.js",
   "directories": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://gitlab.com/ihyperdata/did/did-sdk#readme",
   "dependencies": {
-    "icbsc.js": "^1.0.17"
+    "icbsc.js": "^1.1.1"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.2",

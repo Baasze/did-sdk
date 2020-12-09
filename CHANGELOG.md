@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.11] - 2020-12-09
+
+### Changed
+
+- update icbsc.js to 1.1.1
+
 ## [0.1.10] - 2020-07-01
 
 ### Changed
